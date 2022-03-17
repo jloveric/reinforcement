@@ -111,7 +111,6 @@ public:
   }
 
   void apply(GridWorldState &s) override {
-    assert(setActionSet == true);
     if (validAction(s)) {
       switch (action) {
       case UP:
@@ -128,15 +127,11 @@ public:
         break;
       }
     }
-    setActionSet = false;
   }
 
 private:
   GridAction action;
   World world;
-  int cx;
-  int cy;
-  bool setActionSet = false;
 };
 
 void learn() {
