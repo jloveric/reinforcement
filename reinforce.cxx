@@ -10,27 +10,29 @@ export module reinforce;
 using namespace std;
 export void func();
 
-export class Action;
+export template <class STATE> class Action;
 export class State;
-export template <class Action, class State>
-string compute_default_hash(Action &a, State &s);
+export template <class ACTION, class STATE, class REWARD> class Q;
+export template <class ACTION, class STATE>
+string compute_default_hash(ACTION &a, STATE &s);
 
 void func() { cout << "hello, world!\n"; }
 
-class Action {
+template <class STATE> class Action {
 public:
   Action() {}
   virtual string get_hash() = 0;
+  virtual void apply(STATE &s) = 0;
 
 private:
   string hash;
 };
 
-template <class ACTION> class State {
+class State {
 public:
   State() {}
   virtual string gethash() = 0;
-  virtual update(ACTION &a) = 0;
+  virtual void set_hash(string s) { hash = s; }
 
 private:
   string hash;
@@ -48,8 +50,8 @@ private:
   string hash;
 };
 
-template <class Action, class State>
-string compute_default_hash(Action &a, State &s) {
+template <class ACTION, class STATE>
+string compute_default_hash(ACTION &a, STATE &s) {
   stringstream out;
   out << a.get_hash() << s.get_hash();
   return out.str();
