@@ -6,70 +6,134 @@ import reinforce;
 
 using namespace std;
 
-// State is meant to be only the difference between the base world
-// and the current state...  Though it could just as well be the entire
-// world. Ideally this reduces the memory footprint.
-class GridWorldState : public State {
-public:
-  GridWorldState() {}
+class GridWorldState;
+class GridWorldAction;
 
-private:
-  // map from linear index to
-  unordered_map<int, char> world;
-};
+enum GridAction { UP, DOWN, LEFT, RIGHT };
 
-class Up : public Action<GridWorldState> {
-public:
-  Up() { setHash("up"); }
-  void apply(GridWorldState &s) override{};
-
-private:
-};
-
-class Down : public Action<GridWorldState> {
-public:
-  Down() { setHash("down"); }
-  void apply(GridWorldState &s) override{};
-
-private:
-};
-
-class Left : public Action<GridWorldState> {
-public:
-  Left() { setHash("left"); }
-  void apply(GridWorldState &s) override{};
-
-private:
-};
-
-class Right : public Action<GridWorldState> {
-public:
-  Right() { setHash("right"); }
-  void apply(GridWorldState &s) override{};
-
-private:
-};
-
+// This is the static world
 class World {
 public:
   World(int width, int height) : width(width), height(height) {}
 
-  int get_value(int x, int y) { return grid[index(x, y)]; }
+  int get_value(int x, int y) const { return grid[index(x, y)]; }
 
   void set_value(int x, int y, int val) { grid[index(x, y)] = val; }
 
   void world_from_vector(vector<char> other_grid) { grid = other_grid; }
 
-private:
-  int index(int x, int y) {
+  bool valid_move(int x, int y) const {
+    if (x >= width || x < 0 || y >= height || y < 0) {
+      return false;
+    } else if (grid[index(x, y)] == 'w') {
+      return false;
+    }
+    return true;
+  }
+
+  int index(int x, int y) const {
     assert(x < width && x >= 0);
     assert(y < height && y >= 0);
     return y * width + x;
   }
 
+  int grid_x(int index) { return index % width; }
+
+  int grid_y(int index) { return index / width; }
+
+private:
   vector<char> grid;
   int width;
   int height;
+};
+
+// This is the diff from the static world.  I could just use the static
+// world, but then the memory consumed by the state would be much larger
+// I can define it here by only the dynamic objects
+class GridWorldState : public State {
+public:
+  GridWorldState(World &_world) : world(&_world) {}
+
+  void move(int x, int y) {
+    auto new_index = world->index(x, y);
+    if (new_index != current_index) {
+      world_diff.erase(current_index);
+      world_diff[current_index] = 'x';
+    }
+  }
+
+  void bump(int dx, int dy) {
+    auto grid_x = world->grid_x(current_index);
+    auto grid_y = world->grid_y(current_index);
+    move(grid_x + dx, grid_y + dy);
+  }
+
+  void setCurrentIndex(int index) { current_index = std::move(index); }
+  int getCurrentIndex() { return current_index; }
+
+private:
+  // I'd like this to be const.  I only need the index function anyway.
+  World *world;
+
+  // map from linear index to map value
+  unordered_map<int, char> world_diff;
+  int current_index;
+};
+
+// Breaking my own design!  I'm putting all actions into
+// one so it's simpler for this specific case!
+class GridWorldAction : public Action<GridWorldState> {
+public:
+  GridWorldAction(World &_world) : world(_world) {}
+
+  // This needs to be called before valid move
+  void setAction(GridAction a, int current_x, int current_y) {
+    action = a;
+    cx = current_x;
+    cy = current_y;
+    setActionSet = true;
+  }
+
+  bool validAction(GridWorldState &s) const {
+    switch (action) {
+    case UP:
+      return world.valid_move(cx, cy + 1);
+    case DOWN:
+      return world.valid_move(cx, cy - 1);
+    case LEFT:
+      return world.valid_move(cx - 1, cy);
+    case RIGHT:
+      return world.valid_move(cx + 1, cy);
+    }
+  }
+
+  void apply(GridWorldState &s) override {
+    assert(setActionSet == true);
+    if (validAction(s)) {
+      switch (action) {
+      case UP:
+        s.bump(0, 1);
+        break;
+      case DOWN:
+        s.bump(0, -1);
+        break;
+      case LEFT:
+        s.bump(-1, 0);
+        break;
+      case RIGHT:
+        s.bump(1, 0);
+        break;
+      }
+    }
+    setActionSet = false;
+  }
+
+private:
+  GridAction action;
+  World world;
+  int cx;
+  int cy;
+  bool setActionSet = false;
 };
 
 void learn() {
