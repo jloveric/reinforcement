@@ -1,39 +1,10 @@
-import reinforce;
 
 #include <assert.h>
-//#include <unordered_map>
+#include <unordered_map>
 #include <vector>
+import reinforce;
 
-// safe because inside module!
 using namespace std;
-
-class Up : public Action {
-public:
-  Up() { setHash("up"); }
-
-private:
-};
-
-class Down : public Action {
-public:
-  Down() { setHash("down"); }
-
-private:
-};
-
-class Left : public Action {
-public:
-  Left() { setHash("left"); }
-
-private:
-};
-
-class Right : public Action {
-public:
-  Right() { stHash("right"); }
-
-private:
-};
 
 // State is meant to be only the difference between the base world
 // and the current state...  Though it could just as well be the entire
@@ -44,7 +15,39 @@ public:
 
 private:
   // map from linear index to
-  // unordered_map<int, char> world;
+  unordered_map<int, char> world;
+};
+
+class Up : public Action<GridWorldState> {
+public:
+  Up() { setHash("up"); }
+  void apply(GridWorldState &s) override{};
+
+private:
+};
+
+class Down : public Action<GridWorldState> {
+public:
+  Down() { setHash("down"); }
+  void apply(GridWorldState &s) override{};
+
+private:
+};
+
+class Left : public Action<GridWorldState> {
+public:
+  Left() { setHash("left"); }
+  void apply(GridWorldState &s) override{};
+
+private:
+};
+
+class Right : public Action<GridWorldState> {
+public:
+  Right() { setHash("right"); }
+  void apply(GridWorldState &s) override{};
+
+private:
 };
 
 class World {
