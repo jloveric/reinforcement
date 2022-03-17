@@ -37,9 +37,9 @@ public:
     return y * width + x;
   }
 
-  int grid_x(int index) { return index % width; }
+  int gridX(int index) { return index % width; }
 
-  int grid_y(int index) { return index / width; }
+  int gridY(int index) { return index / width; }
 
 private:
   vector<char> grid;
@@ -63,13 +63,17 @@ public:
   }
 
   void bump(int dx, int dy) {
-    auto grid_x = world->grid_x(current_index);
-    auto grid_y = world->grid_y(current_index);
-    move(grid_x + dx, grid_y + dy);
+    auto cx = world->gridX(current_index);
+    auto cy = world->gridY(current_index);
+    move(cx + dx, cy + dy);
   }
 
   void setCurrentIndex(int index) { current_index = std::move(index); }
   int getCurrentIndex() { return current_index; }
+
+  int gridX() { return world->gridX(current_index); }
+
+  int gridY() { return world->gridY(current_index); }
 
 private:
   // I'd like this to be const.  I only need the index function anyway.
@@ -87,14 +91,13 @@ public:
   GridWorldAction(World &_world) : world(_world) {}
 
   // This needs to be called before valid move
-  void setAction(GridAction a, int current_x, int current_y) {
-    action = a;
-    cx = current_x;
-    cy = current_y;
-    setActionSet = true;
-  }
+  void setAction(GridAction a) { action = a; }
 
   bool validAction(GridWorldState &s) const {
+
+    auto cx = s.gridX();
+    auto cy = s.gridY();
+
     switch (action) {
     case UP:
       return world.valid_move(cx, cy + 1);
