@@ -17,7 +17,9 @@ enum GridAction { UP, DOWN, LEFT, RIGHT };
 // This is the static world
 class World {
 public:
-  World(int width, int height) : width(width), height(height) {}
+  World(int width, int height) : width(width), height(height) {
+    grid = vector<char>(width * height, '0');
+  }
 
   int get_value(int x, int y) const { return grid[index(x, y)]; }
 
@@ -43,6 +45,19 @@ public:
   int gridX(int index) { return index % width; }
 
   int gridY(int index) { return index / width; }
+
+  void print() {
+    int count = 0;
+    for (auto j = 0; j < height; j++) {
+      for (auto i = 0; i < width; i++) {
+        cout << grid[count];
+        count++;
+      };
+      cout << "\n";
+    }
+  }
+
+  void random_world() {}
 
 private:
   vector<char> grid;
@@ -137,27 +152,36 @@ private:
   World *world;
 };
 
-void readWorldFile(string filename) {
+vector<char> readWorldFile(string filename) {
+  vector<char> data;
   cout << "reading file " << filename << "\n";
 
-  /*string line;
+  string line;
   ifstream file(filename);
   if (file.is_open()) {
     while (getline(file, line)) {
-      cout << line << '\n';
+      for (auto i : line) {
+        if (i != '\n') {
+          data.push_back(i);
+        }
+      }
     }
     file.close();
   }
 
   else
-    cout << "Unable to open file";*/
-  return;
+    cout << "Unable to open file";
+  return data;
 }
 
 int main() {
   cout << "are we even in here?\n";
   string filename("inputs/grid_world0.txt");
-  readWorldFile(filename);
+  auto world_map = readWorldFile(filename);
+
+  auto world = World(10, 5);
+  world.world_from_vector(world_map);
+  world.print();
   //   Update rules
 
   //
