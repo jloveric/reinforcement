@@ -1,12 +1,11 @@
 
+#include "reinforce.hh"
 #include <assert.h>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-import reinforce;
 
 using namespace std;
 
