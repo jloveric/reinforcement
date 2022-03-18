@@ -1,7 +1,10 @@
 
 #include <assert.h>
+#include <fstream>
+#include <iostream>
 #include <unordered_map>
 #include <vector>
+
 import reinforce;
 
 using namespace std;
@@ -88,7 +91,7 @@ private:
 // one so it's simpler for this specific case!
 class GridWorldAction : public Action<GridWorldState> {
 public:
-  GridWorldAction(World &_world) : world(_world) {}
+  GridWorldAction(World &_world) : world(&_world) {}
 
   // This needs to be called before valid move
   void setAction(GridAction a) { action = a; }
@@ -100,13 +103,13 @@ public:
 
     switch (action) {
     case UP:
-      return world.valid_move(cx, cy + 1);
+      return world->valid_move(cx, cy + 1);
     case DOWN:
-      return world.valid_move(cx, cy - 1);
+      return world->valid_move(cx, cy - 1);
     case LEFT:
-      return world.valid_move(cx - 1, cy);
+      return world->valid_move(cx - 1, cy);
     case RIGHT:
-      return world.valid_move(cx + 1, cy);
+      return world->valid_move(cx + 1, cy);
     }
   }
 
@@ -131,16 +134,38 @@ public:
 
 private:
   GridAction action;
-  World world;
+  World *world;
 };
 
-void learn() {
-  // Initialize world state
-  int height = 10, width = 10;
-  vector<char> base(100, '0');
-  auto world = World(10, 10);
+void readWorldFile(string filename) {
+  cout << "reading file " << filename << "\n";
 
-  // Update rules
+  /*string line;
+  ifstream file(filename);
+  if (file.is_open()) {
+    while (getline(file, line)) {
+      cout << line << '\n';
+    }
+    file.close();
+  }
+
+  else
+    cout << "Unable to open file";*/
+  return;
+}
+
+int main() {
+  // Initialize world state
+  /*int height = 10, width = 10;
+  vector<char> base(100, '0');
+  auto world = World(10, 10);*/
+
+  cout << "are we even in here?\n";
+
+  string filename("inputs/grid_world0.txt");
+  readWorldFile(filename);
+  //   Update rules
 
   //
+  return 0;
 }

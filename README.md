@@ -6,5 +6,11 @@ g++ -c -std=c++20 -fmodules-ts  reinforce.cxx main.cxx grid_world.cxx
 ```
 and
 ```
-g++ main.o reinforce.o -o app.app
+g++ grid_world.o reinforce.o -o app.app
+```
+in clang
+```
+g++ -c -std=c++20 -fmodules-ts  reinforce.cxx main.cxx grid_world.cxx; g++ grid_world.o reinforce.o -o app.app
+
+
 ```
