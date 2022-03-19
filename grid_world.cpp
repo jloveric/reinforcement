@@ -1,22 +1,15 @@
 
+#include "grid_world.hh"
 #include "reinforce.hh"
 #include <algorithm>
 #include <assert.h>
 #include <cstdlib>
 #include <fstream>
-#include <grid_world.hh>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 using namespace std;
-
-class GridWorldState;
-class GridWorldAction;
-
-enum GridAction { UP, DOWN, LEFT, RIGHT };
-
-// This is the static world
 
 World::World(int width, int height) : width(width), height(height) {
   grid = vector<char>(width * height, '0');
@@ -118,6 +111,7 @@ bool GridWorldAction::validAction(GridWorldState &s) const {
   case RIGHT:
     return world->valid_move(cx + 1, cy);
   }
+  return false;
 }
 
 void GridWorldAction::apply(GridWorldState &s) {

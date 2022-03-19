@@ -64,7 +64,7 @@ private:
 // one so it's simpler for this specific case!
 class GridWorldAction : public Action<GridWorldState> {
 public:
-  GridWorldAction(World &_world) : world(&_world) {}
+  GridWorldAction(World &_world);
 
   // This needs to be called before valid move
   void setAction(GridAction a);
@@ -79,7 +79,6 @@ private:
 
 class GridWorldQ : public Q<GridWorldAction, GridWorldState, double> {
 public:
-  GridWorldQ() {}
 };
 
 vector<char> readWorldFile(const string filename);

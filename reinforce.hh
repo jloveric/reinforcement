@@ -27,6 +27,7 @@ public:
 };
 
 template <class ACTION, class STATE, class REWARD> class Q {
+public:
   // For a specific Q, we actually want to copy the current state
   Q(ACTION a, STATE s, REWARD r)
       : action(std::move(a)), state(std::move(s)), reward(std::move(r)) {}
@@ -34,9 +35,8 @@ template <class ACTION, class STATE, class REWARD> class Q {
   void setState(STATE &s) { state = s; }
   void setReward(REWARD &r) { reward = r; }
 
-  void
-
-      private : ACTION action;
+private:
+  ACTION action;
   STATE state;
   REWARD reward;
   std::string hash;
