@@ -77,4 +77,10 @@ private:
   World *world;
 };
 
-vector<char> readWorldFile(const string filename);
+class GridWorldQ : public Q<GridWorldAction, GridWorldState, double>{
+  public : GridWorldQ(){} private :
+
+}
+
+                   vector<char>
+                   readWorldFile(const string filename);
