@@ -74,7 +74,8 @@ void GridWorldState::move(int x, int y) {
   auto new_index = world->index(x, y);
   if (new_index != current_index) {
     world_diff.erase(current_index);
-    world_diff[current_index] = 'x';
+    world_diff[new_index] = 'x';
+    current_index = new_index;
   }
 }
 
