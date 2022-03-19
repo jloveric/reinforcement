@@ -1,15 +1,13 @@
 
 #include "grid_world.hh"
 #include "reinforce.hh"
-#include <algorithm>
-#include <assert.h>
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <unordered_map>
-#include <vector>
+
 using namespace std;
+
+double random_fraction() {
+  double r = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
+  return r;
+}
 
 World::World(int width, int height) : width(width), height(height) {
   grid = vector<char>(width * height, '0');
@@ -52,15 +50,22 @@ void World::print() {
 }
 
 // fraction of points that are walls
-void World::random_world(const double fraction) {
-  transform(grid.begin(), grid.end(), grid.begin(), [fraction](char c) -> char {
-    double r = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
+void World::random_world(const double fraction, const char value) {
+  transform(grid.begin(), grid.end(), grid.begin(),
+            [fraction, value](char c) -> char {
+              auto r = random_fraction();
 
-    if (r < fraction) {
-      return 'w';
-    }
-    return c;
-  });
+              if (r < fraction) {
+                return value;
+              }
+              return c;
+            });
+}
+
+void World::random_value(char c) {
+  auto r = random_fraction();
+  auto random_index = r * grid.size();
+  grid[random_index] = c;
 }
 
 GridWorldState::GridWorldState(World &_world) : world(&_world) {}
@@ -153,17 +158,4 @@ vector<char> readWorldFile(string filename) {
   else
     cout << "Unable to open file";
   return data;
-}
-
-int main() {
-  cout << "are we even in here?\n";
-  string filename("inputs/grid_world0.txt");
-  auto world_map = readWorldFile(filename);
-
-  auto world = World(20, 20);
-  world.random_world(0.2);
-  // world.world_from_vector(world_map);
-  world.print();
-
-  return 0;
 }

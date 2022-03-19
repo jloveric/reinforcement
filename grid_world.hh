@@ -1,3 +1,4 @@
+#pragma once
 #include "reinforce.hh"
 #include <algorithm>
 #include <assert.h>
@@ -15,6 +16,8 @@ class GridWorldAction;
 
 enum GridAction { UP, DOWN, LEFT, RIGHT };
 
+double random_fraction();
+
 // This is the static world
 class World {
 public:
@@ -30,7 +33,8 @@ public:
   void print();
 
   // fraction of points that are walls
-  void random_world(const double fraction);
+  void random_world(const double fraction, const char value);
+  void random_value(char c);
 
 private:
   vector<char> grid;
@@ -77,6 +81,7 @@ private:
   World *world;
 };
 
+// This could just be a typedef
 class GridWorldQ : public Q<GridWorldAction, GridWorldState, double> {
 public:
 };

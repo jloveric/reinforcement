@@ -2,7 +2,7 @@
 CC := g++
 #CFLAGS := -Wall -g -std=c++20 -fmodules-ts -lstdc++
 CFLAGS := -Wall -g -std=c++20 -lstdc++
-TARGET := grid_world
+TARGET := grid_game
 
 SRCS := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp,%.o,$(SRCS))
