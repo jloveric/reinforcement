@@ -14,6 +14,8 @@ int main() {
   world.random_world(0.1, 'g');
   world.print();
 
+  auto action = GridWorldAction(world);
+
   // Start from the upper corner
   bool finished = false;
   while (!finished) {
