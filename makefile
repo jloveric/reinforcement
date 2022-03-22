@@ -1,6 +1,5 @@
 # In absence of working cmake for c++20 modules using plain old make
 CC := g++
-#CFLAGS := -Wall -g -std=c++20 -fmodules-ts -lstdc++
 CFLAGS := -Wall -g -std=c++20 -lstdc++
 TARGET := grid_game
 

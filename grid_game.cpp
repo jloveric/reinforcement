@@ -10,8 +10,8 @@ int main() {
   auto world_map = readWorldFile(filename);
 
   auto world = World(20, 20);
-  world.random_world(0.2, 'w');
-  world.random_world(0.1, 'g');
+  world.randomWorld(0.2, WALL);
+  world.randomWorld(0.1, GOLD);
   world.print();
 
   auto action = GridWorldAction(world);

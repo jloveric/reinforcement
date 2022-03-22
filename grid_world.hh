@@ -15,6 +15,14 @@ class GridWorldState;
 class GridWorldAction;
 
 enum GridAction { UP, DOWN, LEFT, RIGHT };
+enum WorldType : char {
+  WALL = 'w',
+  EMPTY = '0',
+  COIN = 'c',
+  GOLD = 'g',
+  EXIT = 'e',
+  PLAYER = 'x'
+};
 
 double random_fraction();
 
@@ -23,20 +31,23 @@ class World {
 public:
   World(int width, int height);
 
-  int get_value(int x, int y) const;
-  void set_value(int x, int y, int val);
-  void world_from_vector(vector<char> other_grid);
-  bool valid_move(int x, int y) const;
+  int getValue(int x, int y) const;
+  void setValue(int x, int y, int val);
+  void worldFromVector(vector<char> other_grid);
+  bool validMove(int x, int y) const;
   int index(int x, int y) const;
-  int gridX(int index);
-  int gridY(int index);
+  int gridX(int index) const;
+  int gridY(int index) const;
   void print();
 
   // fraction of points that are walls
-  void random_world(const double fraction, const char value);
-  void random_value(char c);
+  void randomWorld(const double fraction, const char value);
+  void randomValue(char c);
 
 private:
+  // prevent copy for now
+  World(const World &other) {}
+
   vector<char> grid;
   int width;
   int height;
@@ -51,17 +62,21 @@ public:
   void move(int x, int y);
   void bump(int dx, int dy);
   void setCurrentIndex(int index);
-  int getCurrentIndex();
-  int gridX();
-  int gridY();
+  int getCurrentIndex() const;
+  int gridX() const;
+  int gridY() const;
 
 private:
+  // prevent copy for now
+  GridWorldState(const GridWorldState &other) {}
+
   // I'd like this to be const.  I only need the index function anyway.
   World *world;
 
   // map from linear index to map value
   unordered_map<int, char> world_diff;
   int current_index;
+  std::vector<int> path;
 };
 
 // Breaking my own design!  I'm putting all actions into
@@ -73,10 +88,10 @@ public:
   // This needs to be called before valid move
   void setAction(GridAction a);
   bool validAction(GridWorldState &s) const;
-
   void apply(GridWorldState &s) override;
 
 private:
+  GridWorldAction(const GridWorldAction &world);
   GridAction action;
   World *world;
 };

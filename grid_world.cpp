@@ -4,25 +4,25 @@
 
 using namespace std;
 
-double random_fraction() {
+double randomFraction() {
   double r = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
   return r;
 }
 
 World::World(int width, int height) : width(width), height(height) {
-  grid = vector<char>(width * height, '0');
+  grid = vector<char>(width * height, EMPTY);
 }
 
-int World::get_value(int x, int y) const { return grid[index(x, y)]; }
+int World::getValue(int x, int y) const { return grid[index(x, y)]; }
 
-void World::set_value(int x, int y, int val) { grid[index(x, y)] = val; }
+void World::setValue(int x, int y, int val) { grid[index(x, y)] = val; }
 
-void World::world_from_vector(vector<char> other_grid) { grid = other_grid; }
+void World::worldFromVector(vector<char> other_grid) { grid = other_grid; }
 
-bool World::valid_move(int x, int y) const {
+bool World::validMove(int x, int y) const {
   if (x >= width || x < 0 || y >= height || y < 0) {
     return false;
-  } else if (grid[index(x, y)] == 'w') {
+  } else if (grid[index(x, y)] == WALL) { // TODO: magic number
     return false;
   }
   return true;
@@ -50,10 +50,10 @@ void World::print() {
 }
 
 // fraction of points that are walls
-void World::random_world(const double fraction, const char value) {
+void World::randomWorld(const double fraction, const char value) {
   transform(grid.begin(), grid.end(), grid.begin(),
             [fraction, value](char c) -> char {
-              auto r = random_fraction();
+              auto r = randomFraction();
 
               if (r < fraction) {
                 return value;
@@ -62,8 +62,8 @@ void World::random_world(const double fraction, const char value) {
             });
 }
 
-void World::random_value(char c) {
-  auto r = random_fraction();
+void World::randomValue(char c) {
+  auto r = randomFraction();
   auto random_index = r * grid.size();
   grid[random_index] = c;
 }
@@ -74,7 +74,7 @@ void GridWorldState::move(int x, int y) {
   auto new_index = world->index(x, y);
   if (new_index != current_index) {
     world_diff.erase(current_index);
-    world_diff[new_index] = 'x';
+    world_diff[new_index] = PLAYER;
     current_index = new_index;
   }
 }
@@ -109,13 +109,13 @@ bool GridWorldAction::validAction(GridWorldState &s) const {
 
   switch (action) {
   case UP:
-    return world->valid_move(cx, cy + 1);
+    return world->validMove(cx, cy + 1);
   case DOWN:
-    return world->valid_move(cx, cy - 1);
+    return world->validMove(cx, cy - 1);
   case LEFT:
-    return world->valid_move(cx - 1, cy);
+    return world->validMove(cx - 1, cy);
   case RIGHT:
-    return world->valid_move(cx + 1, cy);
+    return world->validMove(cx + 1, cy);
   }
   return false;
 }
