@@ -6,5 +6,5 @@ make
 ```
 and then run
 ```
-./grid_world
+./grid_game
 ```

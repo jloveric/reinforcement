@@ -34,9 +34,9 @@ int World::index(int x, int y) const {
   return y * width + x;
 }
 
-int World::gridX(int index) { return index % width; }
+int World::gridX(int index) const { return index % width; }
 
-int World::gridY(int index) { return index / width; }
+int World::gridY(int index) const { return index / width; }
 
 void World::print() {
   int count = 0;
@@ -88,11 +88,11 @@ void GridWorldState::bump(int dx, int dy) {
 void GridWorldState::setCurrentIndex(int index) {
   current_index = std::move(index);
 }
-int GridWorldState::getCurrentIndex() { return current_index; }
+int GridWorldState::getCurrentIndex() const { return current_index; }
 
-int GridWorldState::gridX() { return world->gridX(current_index); }
+int GridWorldState::gridX() const { return world->gridX(current_index); }
 
-int GridWorldState::gridY() { return world->gridY(current_index); }
+int GridWorldState::gridY() const { return world->gridY(current_index); }
 
 // Breaking my own design!  I'm putting all actions into
 // one so it's simpler for this specific case!
