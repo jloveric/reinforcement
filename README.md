@@ -1,6 +1,6 @@
 # reinforcement
-Generic c++20 reinforcement learning library.  WIP to get some experience in both RL and c++20.
-Alas, looks like cmake doesn't really support modules yet (will work on hacks this) so just using the command line to build for the moment.
+Generic c++20 reinforcement learning library.  Long work in progress to get some experience in RL.  As of this writing c++20 modules are still
+to buggy so resorting to header files!
 ```
 make
 ```
