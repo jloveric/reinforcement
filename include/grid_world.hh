@@ -44,10 +44,10 @@ public:
   void randomWorld(const double fraction, const char value);
   void randomValue(char c);
 
-private:
-  // prevent copy for now
-  World(const World &other) {}
+  World(const World &other) = delete;
+  World(World &&other) = delete;
 
+private:
   vector<char> grid;
   int width;
   int height;
@@ -66,10 +66,10 @@ public:
   int gridX() const;
   int gridY() const;
 
-private:
-  // prevent copy for now
-  GridWorldState(const GridWorldState &other) {}
+  GridWorldState(const GridWorldState &other) = delete;
+  GridWorldState(GridWorldState &&other) = delete;
 
+private:
   // I'd like this to be const.  I only need the index function anyway.
   World *world;
 
@@ -90,8 +90,10 @@ public:
   bool validAction(GridWorldState &s) const;
   void apply(GridWorldState &s) override;
 
+  GridWorldAction(const GridWorldAction &world) = delete;
+  GridWorldAction(GridWorldAction &&world) = delete;
+
 private:
-  GridWorldAction(const GridWorldAction &world);
   GridAction action;
   World *world;
 };
