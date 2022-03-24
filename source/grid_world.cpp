@@ -13,22 +13,30 @@ World::World(int width, int height) : width(width), height(height) {
   grid = vector<char>(width * height, EMPTY);
 }
 
-int World::getValue(int x, int y) const { return grid[index(x, y)]; }
+int World::getValue(int x, int y) const { return grid[getIndex(x, y)]; }
+int World::getValue(int index) const {
+  assert((index < grid.size()) && (index >= 0));
+  return grid[index];
+}
 
-void World::setValue(int x, int y, int val) { grid[index(x, y)] = val; }
+void World::setValue(int x, int y, int val) { grid[getIndex(x, y)] = val; }
+void World::setValue(int index, int val) {
+  assert(index >= 0 && index < grid.size());
+  grid[index] = val;
+}
 
 void World::worldFromVector(vector<char> other_grid) { grid = other_grid; }
 
 bool World::validMove(int x, int y) const {
   if (x >= width || x < 0 || y >= height || y < 0) {
     return false;
-  } else if (grid[index(x, y)] == WALL) { // TODO: magic number
+  } else if (grid[getIndex(x, y)] == WALL) { // TODO: magic number
     return false;
   }
   return true;
 }
 
-int World::index(int x, int y) const {
+int World::getIndex(int x, int y) const {
   assert(x < width && x >= 0);
   assert(y < height && y >= 0);
   return y * width + x;
@@ -71,7 +79,7 @@ void World::randomValue(char c) {
 GridWorldState::GridWorldState(World &_world) : world(&_world) {}
 
 void GridWorldState::move(int x, int y) {
-  auto new_index = world->index(x, y);
+  auto new_index = world->getIndex(x, y);
   if (new_index != current_index) {
     world_diff.erase(current_index);
     world_diff[new_index] = PLAYER;

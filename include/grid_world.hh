@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -24,7 +25,7 @@ enum WorldType : char {
   PLAYER = 'x'
 };
 
-double random_fraction();
+double randomFraction();
 
 // This is the static world
 class World {
@@ -32,10 +33,12 @@ public:
   World(int width, int height);
 
   int getValue(int x, int y) const;
+  int getValue(int index) const;
   void setValue(int x, int y, int val);
+  void setValue(int index, int val);
   void worldFromVector(vector<char> other_grid);
   bool validMove(int x, int y) const;
-  int index(int x, int y) const;
+  int getIndex(int x, int y) const;
   int gridX(int index) const;
   int gridY(int index) const;
   void print();
@@ -43,9 +46,6 @@ public:
   // fraction of points that are walls
   void randomWorld(const double fraction, const char value);
   void randomValue(char c);
-
-  World(const World &other) = delete;
-  World(World &&other) = delete;
 
 private:
   vector<char> grid;
@@ -66,8 +66,8 @@ public:
   int gridX() const;
   int gridY() const;
 
-  GridWorldState(const GridWorldState &other) = delete;
-  GridWorldState(GridWorldState &&other) = delete;
+  // GridWorldState(const GridWorldState &other);
+  // GridWorldState(GridWorldState &&other);
 
 private:
   // I'd like this to be const.  I only need the index function anyway.
@@ -90,17 +90,14 @@ public:
   bool validAction(GridWorldState &s) const;
   void apply(GridWorldState &s) override;
 
-  GridWorldAction(const GridWorldAction &world) = delete;
-  GridWorldAction(GridWorldAction &&world) = delete;
-
 private:
   GridAction action;
+
+  // We want the pointer copied
   World *world;
 };
 
-// This could just be a typedef
-class GridWorldQ : public Q<GridWorldAction, GridWorldState, double> {
-public:
-};
+// Using a typedef for now since it uses default Q.
+typedef Q<GridWorldAction, GridWorldState, double> GridWorldQ;
 
 vector<char> readWorldFile(const string filename);
