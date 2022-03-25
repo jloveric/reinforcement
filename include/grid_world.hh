@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
+// Bad, I know.  When modules are working that won't be an issue.
 using namespace std;
 
 class GridWorldState;

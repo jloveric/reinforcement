@@ -33,7 +33,14 @@ int main() {
     // choose a random direction
     auto a = static_cast<GridAction>(rand() % 4);
     action.setAction(a);
+
+    // TODO - Seems like this should be automatic.
+    action.setHash(string{a});
+
     action.apply(state);
+
+    // TODO - Again, should be automatic.
+    state.setHash(string{state.getCurrentIndex()});
 
     auto ci = state.getCurrentIndex();
     auto val = world.getValue(ci);
