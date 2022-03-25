@@ -1,6 +1,6 @@
 # reinforcement
-Generic c++20 reinforcement learning library.  Major WIP (work in progress).  As of this writing c++20 modules are still
-too buggy so resorting to header files!
+Generic c++20 reinforcement learning library.  Major work in progress.  As of this writing c++20 modules are still
+too buggy so resorting to header files!  I don't recommend using this at this point, right now it's mainly for my own learning.
 ```
 cmake .
 make

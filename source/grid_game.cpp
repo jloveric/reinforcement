@@ -32,15 +32,15 @@ int main() {
   while (!finished) {
     // choose a random direction
     auto a = static_cast<GridAction>(rand() % 4);
-    action.setAction(a);
 
-    // TODO - Seems like this should be automatic.
+    // TODO - Seems like this should be automatic. Hash is different
+    // for every action and state (should also be different for outcome but
+    // right now that is deterministic.)
     action.setHash(string{a});
-
-    action.apply(state);
-
-    // TODO - Again, should be automatic.
     state.setHash(string{state.getCurrentIndex()});
+
+    action.setAction(a);
+    action.apply(state);
 
     auto ci = state.getCurrentIndex();
     auto val = world.getValue(ci);
