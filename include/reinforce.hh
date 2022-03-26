@@ -57,6 +57,9 @@ public:
   void setReward(REWARD &r) { reward = r; }
   void setQ(REWARD &q) { q_value = q; }
 
+  bool operator>(const Q &other) const { return this->operator() > other(); }
+  bool operator<(const Q &other) const { return this->operator() < other(); }
+
   REWARD operator()() const { return q_value; }
   REWARD getReward() const { return reward; }
   STATE getState() const { return state; }
@@ -121,9 +124,25 @@ void updateGraphSamples(std::unordered_map<std::string, QVALUE> &qmap,
  */
 template <class QVALUE>
 void valueIteration(std::unordered_map<std::string, QVALUE> &qmap,
-                    std::vector<std::vector<QVALUE>> &paths) {
+                    std::vector<std::vector<QVALUE>> &paths,
+                    double gamma = 1.0) {
 
   // Add any there.
-  for (auto element : paths) {
+  for (auto &element : paths) {
+    double lastQ = 0.0;
+    for (auto &q : element.rbegin()) { // We want to reverse iterate
+      auto qhash = q.getHash();
+      auto qEstimate = q.getReward() + gamma * lastQ;
+      q.setQ(qEstimate);
+
+      if (qmap.contains(qhash)) { // check that the reward is correct
+        auto &qInMap = qmap[qhash];
+        if (qInMap < q) { // We want the maximum q found to be stored
+          qmap[qhash] = q;
+        }
+      } else {
+        qmap[qhash] = q;
+      }
+    }
   }
 }
