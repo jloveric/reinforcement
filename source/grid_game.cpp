@@ -22,51 +22,63 @@ int main() {
 
   auto action = GridWorldAction(world);
   auto state = GridWorldState(world);
-  state.setCurrentIndex(0);
 
-  vector<GridWorldQ> q;
+  vector<vector<GridWorldQ>> q;
 
-  // Start from the upper corner
-  bool finished = false;
-  int count = 0;
-  while (!finished) {
-    // choose a random direction
-    auto a = static_cast<GridAction>(rand() % 4);
+  int trials = 50;
 
-    // TODO - Seems like this should be automatic. Hash is different
-    // for every action and state (should also be different for outcome but
-    // right now that is deterministic.)
-    action.setHash(string{a});
-    state.setHash(string{state.getCurrentIndex()});
+  for (auto i = 0; i < trials; ++i) {
+    state.setCurrentIndex(0);
+    vector<GridWorldQ> sample;
+    bool finished = false;
 
-    action.setAction(a);
-    action.apply(state);
+    // Start from the upper corner
+    int count = 0;
+    while (!finished) {
+      // choose a random direction
+      auto a = static_cast<GridAction>(rand() % 4);
 
-    auto ci = state.getCurrentIndex();
-    auto val = world.getValue(ci);
+      // TODO - Seems like this should be automatic. Hash is different
+      // for every action and state (should also be different for outcome but
+      // right now that is deterministic.)
+      action.setHash(string{a});
+      state.setHash(to_string(state.getCurrentIndex()));
 
-    double reward = -1.0;
-    switch (val) {
-    case EXIT:
-      val = 10;
-      break;
-    case GOLD:
-      val = 1;
-      break;
+      action.setAction(a);
+      action.apply(state);
+
+      auto ci = state.getCurrentIndex();
+      auto val = world.getValue(ci);
+
+      double reward = -1.0;
+      switch (val) {
+      case EXIT:
+        val = 10;
+        finished = true;
+        break;
+      case GOLD:
+        val = 1;
+        break;
+      }
+
+      // This is a overkill for gridworld, but might be better for much more
+      // complex systems like conversational agents.
+      sample.push_back(
+          GridWorldQ(action, state, reward,
+                     compute_default_hash<GridWorldAction, GridWorldState>(
+                         action, state)));
+
+      cout << ci << "\n";
+
+      count++;
+      if (count > 100)
+        finished = true;
     }
-
-    // This is a overkill for gridworld, but might be better for much more
-    // complex systems like conversational agents.
-    q.push_back(GridWorldQ(
-        action, state, reward,
-        compute_default_hash<GridWorldAction, GridWorldState>(action, state)));
-
-    cout << ci << "\n";
-
-    count++;
-    if (count > 100)
-      finished = true;
+    cout << "finished " << i << endl;
+    q.push_back(sample);
   }
+
+  // Now that we have the samples lets perform the
 
   return 0;
 }

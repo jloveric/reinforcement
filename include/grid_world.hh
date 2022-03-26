@@ -17,6 +17,10 @@ class GridWorldState;
 class GridWorldAction;
 
 enum GridAction { UP, DOWN, LEFT, RIGHT };
+
+/**
+ * @brief Define the value of the different characters in the world.
+ */
 enum WorldType : char {
   WALL = 'w',
   EMPTY = '0',
@@ -26,9 +30,17 @@ enum WorldType : char {
   PLAYER = 'x'
 };
 
+/**
+ * @brief Return a random double between 0 and 1.
+ *
+ * @return double
+ */
 double randomFraction();
 
-// This is the static world
+/**
+ * @brief Grid world description.  MxN map containing characters
+ * to depict obstacles etc...
+ */
 class World {
 public:
   World(int width, int height);
@@ -54,9 +66,12 @@ private:
   int height;
 };
 
-// This is the diff from the static world.  I could just use the static
-// world, but then the memory consumed by the state would be much larger
-// I can define it here by only the dynamic objects
+/**
+ * @brief State of the world, this is generally a subset of
+ * the world which includes the persons location.  Could potentially
+ * be a copy of the entire world we want that to be visible to the
+ * observer.
+ */
 class GridWorldState : public State {
 public:
   GridWorldState(World &_world);
@@ -80,8 +95,11 @@ private:
   std::vector<int> path;
 };
 
-// Breaking my own design!  I'm putting all actions into
-// one so it's simpler for this specific case!
+/**
+ * @brief Actions in the grid world.  In this case they are stacked
+ * into one class.
+ *
+ */
 class GridWorldAction : public Action<GridWorldState> {
 public:
   GridWorldAction(World &_world);
