@@ -74,6 +74,7 @@ private:
  */
 class GridWorldState : public State {
 public:
+  GridWorldState() {}
   GridWorldState(World &_world);
   void move(int x, int y);
   void bump(int dx, int dy);
@@ -102,6 +103,7 @@ private:
  */
 class GridWorldAction : public Action<GridWorldState> {
 public:
+  GridWorldAction() {}
   GridWorldAction(World &_world);
 
   // This needs to be called before valid move

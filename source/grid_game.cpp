@@ -14,16 +14,18 @@ int main() {
   string filename("inputs/grid_world0.txt");
   auto world_map = readWorldFile(filename);
 
-  auto world = World(20, 20);
+  int size = 10;
+  auto world = World(10, 10);
   world.randomWorld(0.2, WALL);
-  world.randomWorld(0.1, GOLD);
-  world.setValue(19, 19, 'e');
+  // world.randomWorld(0.1, GOLD);
+  world.setValue(size * size - 1, 'e');
   world.print();
 
   auto action = GridWorldAction(world);
   auto state = GridWorldState(world);
 
   vector<vector<GridWorldQ>> q;
+  unordered_map<string, GridWorldQ> qmap;
 
   int trials = 50;
 
@@ -68,14 +70,24 @@ int main() {
                      compute_default_hash<GridWorldAction, GridWorldState>(
                          action, state)));
 
-      cout << ci << "\n";
+      // cout << ci << "\n";
 
       count++;
       if (count > 100)
         finished = true;
     }
-    cout << "finished " << i << endl;
+
+    // cout << "finished " << i << endl;
     q.push_back(sample);
+  }
+
+  //
+  for (auto i = 0; i < 10; ++i) {
+    valueIteration<GridWorldQ>(qmap, q, 1.0);
+  }
+
+  for (auto &[key, val] : qmap) {
+    cout << val.getQ() << "\n";
   }
 
   // Now that we have the samples lets perform the
