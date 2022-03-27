@@ -152,14 +152,17 @@ void valueIteration(std::unordered_map<std::string, QVALUE> &qmap,
       auto qEstimate = q.getReward() + gamma * lastQ;
       q.setQ(qEstimate);
 
-      /*if (qmap.contains(qhash)) { // check that the reward is correct
+      if (qmap.contains(qhash)) { // check that the reward is correct
         auto &qInMap = qmap[qhash];
         if (qInMap < q) { // We want the maximum q found to be stored
+          std::cout << "swapping q\n";
           qmap[qhash] = q;
         }
-      } else {*/
-      qmap[qhash] = q;
-      //}
+      } else {
+        qmap[qhash] = q;
+      }
+
+      lastQ = qmap[qhash].getQ();
     }
   }
 }

@@ -28,6 +28,7 @@ int main() {
   unordered_map<string, GridWorldQ> qmap;
 
   int trials = 50;
+  int max_count = 1000;
 
   for (auto i = 0; i < trials; ++i) {
     state.setCurrentIndex(0);
@@ -55,11 +56,11 @@ int main() {
       double reward = -1.0;
       switch (val) {
       case EXIT:
-        val = 10;
+        reward = 10;
         finished = true;
         break;
       case GOLD:
-        val = 1;
+        reward = 1;
         break;
       }
 
@@ -70,19 +71,16 @@ int main() {
                      compute_default_hash<GridWorldAction, GridWorldState>(
                          action, state)));
 
-      // cout << ci << "\n";
-
       count++;
-      if (count > 100)
+      if (count > max_count)
         finished = true;
     }
 
-    // cout << "finished " << i << endl;
     q.push_back(sample);
   }
 
   //
-  for (auto i = 0; i < 10; ++i) {
+  for (auto i = 0; i < 100; ++i) {
     valueIteration<GridWorldQ>(qmap, q, 1.0);
   }
 
