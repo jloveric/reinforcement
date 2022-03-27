@@ -79,7 +79,6 @@ int main() {
     q.push_back(sample);
   }
 
-  //
   for (auto i = 0; i < 100; ++i) {
     valueIteration<GridWorldQ>(qmap, q, 1.0);
   }
